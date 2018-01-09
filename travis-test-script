@@ -3,4 +3,5 @@ set -ex
 nix-channel --add https://nix.dapphub.com/pkgs/dapphub
 nix-channel --update
 nix-env -iA dapphub.dapp
-make
+make install
+make test

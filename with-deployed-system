@@ -13,7 +13,7 @@
 set -ex
 
 # Make sure we have a local clone of the Sai repository.
-# git clone --recursive https://github.com/makerdao/sai
+git clone --recursive https://github.com/makerdao/sai
 
 # Start a local testnet on port 2000; set to stop on exit.
 dapp testnet & trap "kill -HUP -0" EXIT
@@ -25,7 +25,7 @@ until curl -s "$ETH_RPC_URL"; do sleep 2; done
 # Use the Sai system's deploy scripts to start it.
 cd sai
 export SETH_STATUS=yes
-export ETH_RPC_ACCOUNTS=yes # Future-proof
+export ETH_RPC_ACCOUNTS=yes # Don't use ethsign
 bin/deploy-fab && . load-fab-unknown
 bin/deploy     && . load-env-unknown
 cd ..

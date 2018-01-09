@@ -24,7 +24,8 @@ cd sai
 dapp testnet & trap "kill -INT -0" EXIT
 
 # Wait until it's up, then use it for the deployment.
-sleep 3; export ETH_RPC_URL=http://127.1:2000
+export ETH_RPC_URL=http://127.1:2000
+until curl -s "$ETH_RPC_URL"; do sleep 2; done
 
 # Use the Sai system's deploy scripts to start it.
 cd sai

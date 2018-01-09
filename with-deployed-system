@@ -13,11 +13,7 @@
 set -ex
 
 # Make sure we have a local clone of the Sai repository.
-if [ -d sai ]; then
-  ( cd sai ; git fetch ; git reset --hard origin/master )
-else
-  git clone --recursive https://github.com/makerdao/sai
-fi
+git clone --recursive https://github.com/makerdao/sai
 
 # Start a local testnet on port 2000; set to stop on exit.
 dapp testnet & trap "kill -INT -0" EXIT

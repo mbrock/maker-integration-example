@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+## This script is invoked like
+##
+##   $ with-deployed-system node index.js
+##
+## which will run Node in the environment of a running Geth testnet
+## with the Sai system deployed.
+##
+## The environment has ETH_RPC_URL set along with the contract addresses.
+##
+## When the script exits, the Geth testnet is stopped and deleted.
+
+set -ex
+
+# Make sure we have a local clone of the Sai repository.
+[ -d sai ] || (
+  git clone --recursive https://github.com/makerdao/sai
+  cd sai ; dapp build
+)
+
+# Start a local testnet on port 2000; set to stop on exit.
+dapp testnet & trap "kill -INT -0" EXIT
+
+# Wait until it's up, then use it for the deployment.
+sleep 3; export ETH_RPC_URL=http://127.1:2000
+
+# Use the Sai system's deploy scripts to start it.
+cd sai
+export SETH_STATUS=yes
+bin/deploy-fab && . load-fab-unknown
+bin/deploy     && . load-env-unknown
+cd ..
+
+# We now have SAI_GEM, SAI_SAI, SAI_SKR, etc in the environment.
+# See the list at the bottom of the in the deploy script.
+# Proceed to the command given as arguments.
+"$@"
